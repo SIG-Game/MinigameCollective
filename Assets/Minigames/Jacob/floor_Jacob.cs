@@ -2,7 +2,7 @@
 using System.Collections.Generic;
 using UnityEngine;
 
-public class floor : MonoBehaviour
+public class floor_Jacob : MonoBehaviour
 {
     bool isLocked = false;
     public float heightToFreeze = -4.5f;
