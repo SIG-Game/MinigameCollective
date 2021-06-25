@@ -5,8 +5,8 @@ using UnityEngine;
 public class DragonPlayerEmily : MonoBehaviour
 {
     public float movementSpeed;
-    public string movementAxisx;
-    public string movementAxisy;
+    // public string movementAxisx;
+    // public string movementAxisy;
 
 
     Rigidbody2D rb2d;
@@ -18,9 +18,9 @@ public class DragonPlayerEmily : MonoBehaviour
 
     void Update()
     {
-        float xVelocity = Input.GetAxisRaw(movementAxisx);
+        float xVelocity = Input.GetAxisRaw("Horizontal");
         rb2d.velocity = new Vector2(rb2d.velocity.x, movementSpeed * xVelocity);
-        float yVelocity = Input.GetAxisRaw(movementAxisy);
+        float yVelocity = Input.GetAxisRaw("Vertical");
         rb2d.velocity = new Vector3(rb2d.velocity.y, movementSpeed * yVelocity);
 
     }
