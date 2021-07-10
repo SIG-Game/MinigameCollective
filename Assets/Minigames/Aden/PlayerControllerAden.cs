@@ -52,4 +52,10 @@ public class PlayerControllerAden : MonoBehaviour
             spawnedBullet.GetComponent<Rigidbody2D>().velocity = new Vector3(direction * bulletSpeed, 0.0f, 0.0f);
         }
     }
+
+    public void RespawnPlayer()
+    {
+        transform.position = Vector3.zero;
+        rb2d.velocity = Vector3.zero;
+    }
 }
