@@ -4,5 +4,17 @@
 EditorBuildSettings:
   m_ObjectHideFlags: 0
   serializedVersion: 2
-  m_Scenes: []
+  m_Scenes:
+  - enabled: 1
+    path: Assets/Minigames/Emily/EmilyMini.unity
+    guid: 07c308531b9114e6ea444671c8d938ed
+  - enabled: 1
+    path: Assets/Minigames/Emily/Level2Emily.unity
+    guid: faa426f9c38424951a337447a1ba3dd3
+  - enabled: 1
+    path: Assets/Minigames/Emily/Level3Emily.unity
+    guid: 7254c98aac3d74247898f6550c03e32f
+  - enabled: 1
+    path: Assets/Minigames/Emily/StartScreenEmily.unity
+    guid: 01249c843f1eb454584cefffbc5f2c81
   m_configObjects: {}
