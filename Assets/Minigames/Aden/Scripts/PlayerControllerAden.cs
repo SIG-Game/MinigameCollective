@@ -1,92 +1,183 @@
-﻿using System.Collections;
-using System.Collections.Generic;
-using UnityEngine;
+﻿using UnityEngine;
 
-public class PlayerControllerAden : MonoBehaviour
+public class PlayerControllerAden : RaycastControllerAden
 {
-    public float xSpeed;
-    public float jumpSpeed;
+    public float movementSpeed;
+    public float jumpVelocity;
+    public float gravity;
 
+    public Transform firePoint;
     public GameObject bullet;
     public float bulletSpeed;
 
-    public float groundedRayLength;
-
-    Rigidbody2D rb2d;
-    LayerMask platformMask;
     int direction = 1;
 
-    // Start is called before the first frame update
-    void Start()
-    {
-        rb2d = GetComponent<Rigidbody2D>();
+    CollisionInfo collisions;
 
-        platformMask = LayerMask.GetMask("Platform");
+    Vector3 startPoint;
+    Vector3 velocity;
+
+    public override void Start()
+    {
+        startPoint = transform.position;
+        base.Start();
     }
 
-    // Update is called once per frame
     void Update()
     {
-        float xVelocity = xSpeed * Input.GetAxisRaw("Horizontal");
-        float yVelocity = rb2d.velocity.y;
-
-        if (xVelocity != 0.0f && direction != Mathf.Sign(xVelocity)) {
-            direction *= -1;
-            Vector3 newLocalScale = new Vector3(direction, 1.0f, 1.0f);
-            transform.localScale = newLocalScale;
-        }
-
-        if (Input.GetKeyDown(KeyCode.Space) && isGrounded())
-        {
-            yVelocity = jumpSpeed;
-        }
-
-        rb2d.velocity = new Vector2(xVelocity, yVelocity);
-
         if (Input.GetMouseButtonDown(0))
         {
-            Vector3 bulletPos = transform.position;
-            bulletPos.x += direction;
+            Shoot();
+        }
 
-            GameObject spawnedBullet = Instantiate(bullet, bulletPos, Quaternion.identity);
+        float horizontalInput = Input.GetAxisRaw("Horizontal");
 
-            Vector3 bulletLocalScale = spawnedBullet.transform.localScale;
-            bulletLocalScale.x *= direction;
+        if (horizontalInput != 0.0f && direction != Mathf.Sign(horizontalInput))
+        {
+            FlipPlayer();
+        }
 
-            spawnedBullet.transform.localScale = bulletLocalScale;
-            spawnedBullet.GetComponent<Rigidbody2D>().velocity = new Vector3(direction * bulletSpeed, 0.0f, 0.0f);
+        if (collisions.above || collisions.below)
+        {
+            velocity.y = 0.0f;
+        }
+
+        if (velocity.y == 0.0f)
+        {
+            velocity.y += gravity * Time.deltaTime * 0.5f;
+        }
+        else
+        {
+            velocity.y += gravity * Time.deltaTime;
+        }
+
+        if (Input.GetKeyDown(KeyCode.Space) && collisions.below)
+        {
+            velocity.y += jumpVelocity;
+        }
+
+        velocity.x = horizontalInput * movementSpeed;
+
+        Move(velocity * Time.deltaTime);
+    }
+
+    public void Move(Vector2 velocity)
+    {
+        collisions.Reset();
+        UpdateRaycastOrigins();
+
+        if (velocity.x != 0)
+        {
+            HorizontalCollisions(ref velocity);
+        }
+
+        if (velocity.y != 0)
+        {
+            VerticalCollisions(ref velocity);
+        }
+
+        transform.Translate(velocity);
+    }
+
+    void HorizontalCollisions(ref Vector2 velocity)
+    {
+        float xDir = Mathf.Sign(velocity.x);
+        float xDist = Mathf.Abs(velocity.x) + skinWidth + extraInnerRayDist;
+
+        for (int i = 0; i < numHorizontalRays; ++i)
+        {
+            Vector2 rayOrigin = (xDir == 1) ? raycastOrigins.bottomRight : raycastOrigins.bottomLeft;
+            rayOrigin.x += -xDir * extraInnerRayDist;
+            rayOrigin.y += i * horizontalRaySpacing;
+
+            RaycastHit2D hit = Physics2D.Raycast(rayOrigin, Vector2.right * xDir, xDist, collisionMask);
+
+            Debug.DrawRay(rayOrigin, Vector2.right * xDir * xDist, Color.red);
+
+            if (hit)
+            {
+                velocity.x = (hit.distance - skinWidth - extraInnerRayDist) * xDir;
+                xDist = hit.distance;
+
+                if (xDir == 1.0f)
+                {
+                    collisions.right = true;
+                }
+                else
+                {
+                    collisions.left = true;
+                }
+            }
         }
     }
 
-    bool isGrounded()
+    void VerticalCollisions(ref Vector2 velocity)
     {
-        Bounds bounds = GetComponent<BoxCollider2D>().bounds;
-        Vector2 bottomLeft = new Vector2(bounds.center.x - bounds.extents.x, bounds.center.y - bounds.extents.y);
-        Vector2 bottomRight = new Vector2(bounds.center.x + bounds.extents.x, bounds.center.y - bounds.extents.y);
+        float yDir = Mathf.Sign(velocity.y);
+        float yDist = Mathf.Abs(velocity.y) + skinWidth + extraInnerRayDist;
 
-        RaycastHit2D bottomLeftHit = Physics2D.Raycast(bottomLeft, Vector2.down, groundedRayLength, platformMask);
-        RaycastHit2D bottomRightHit = Physics2D.Raycast(bottomRight, Vector2.down, groundedRayLength, platformMask);
-
-        /* For debugging:
-        Color bottomLeftRayColor = Color.red;
-        Color bottomRightRayColor = Color.red;
-        if (bottomLeftHit.collider != null)
+        for (int i = 0; i < numVerticalRays; ++i)
         {
-            bottomLeftRayColor = Color.green;
-        }
-        if (bottomRightHit.collider != null)
-        {
-            bottomRightRayColor = Color.green;
-        }
-        Debug.DrawRay(bottomLeft, Vector2.down * groundedRayLength, bottomLeftRayColor);
-        Debug.DrawRay(bottomRight, Vector2.down * groundedRayLength, bottomRightRayColor); */
+            Vector2 rayOrigin = (yDir == 1) ? raycastOrigins.topLeft : raycastOrigins.bottomLeft;
+            rayOrigin.x += (i * verticalRaySpacing) + velocity.x;
+            rayOrigin.y += -yDir * extraInnerRayDist;
 
-        return bottomLeftHit.collider != null || bottomRightHit.collider != null;
+            RaycastHit2D hit = Physics2D.Raycast(rayOrigin, Vector2.up * yDir, yDist, collisionMask);
+
+            Debug.DrawRay(rayOrigin, Vector2.up * yDir * yDist, Color.red);
+
+            if (hit)
+            {
+                velocity.y = (hit.distance - skinWidth - extraInnerRayDist) * yDir;
+                yDist = hit.distance;
+
+                if (yDir == 1.0f)
+                {
+                    collisions.above = true;
+                }
+                else
+                {
+                    collisions.below = true;
+                }
+            }
+        }
+    }
+
+    void FlipPlayer()
+    {
+        direction *= -1;
+        Vector3 newLocalScale = new Vector3(direction, 1.0f, 1.0f);
+        transform.localScale = newLocalScale;
+    }
+
+    void Shoot()
+    {
+        Vector3 bulletPos = firePoint.transform.position;
+
+        GameObject spawnedBullet = Instantiate(bullet, bulletPos, Quaternion.identity);
+
+        Vector3 bulletLocalScale = spawnedBullet.transform.localScale;
+        bulletLocalScale.x *= direction;
+
+        spawnedBullet.transform.localScale = bulletLocalScale;
+        spawnedBullet.GetComponent<Rigidbody2D>().velocity = new Vector3(direction * bulletSpeed, 0.0f, 0.0f);
     }
 
     public void RespawnPlayer()
     {
-        transform.position = Vector3.zero;
-        rb2d.velocity = Vector3.zero;
+        transform.position = startPoint;
+        direction = 1;
+        velocity = Vector2.zero;
+    }
+
+    struct CollisionInfo
+    {
+        public bool above, below, left, right;
+
+        public void Reset()
+        {
+            left = right = false;
+            above = below = false;
+        }
     }
 }
