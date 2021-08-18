@@ -166,8 +166,12 @@ public class PlayerControllerAden : RaycastControllerAden
     public void RespawnPlayer()
     {
         transform.position = startPoint;
-        direction = 1;
         velocity = Vector2.zero;
+
+        if (direction == -1)
+        {
+            FlipPlayer();
+        }
     }
 
     struct CollisionInfo
