@@ -3,6 +3,7 @@
 public class PlayerControllerAden : RaycastControllerAden
 {
     public float movementSpeed;
+    public float xAccelTime;
     public float jumpVelocity;
     public float jumpButtonReleaseVelocity;
     public float gravity;
@@ -12,6 +13,7 @@ public class PlayerControllerAden : RaycastControllerAden
     public float bulletSpeed;
 
     int direction = 1;
+    float xSmoothing;
 
     CollisionInfo collisions;
 
@@ -61,7 +63,7 @@ public class PlayerControllerAden : RaycastControllerAden
             velocity.y = jumpButtonReleaseVelocity;
         }
 
-        velocity.x = horizontalInput * movementSpeed;
+        velocity.x = Mathf.SmoothDamp(velocity.x, horizontalInput * movementSpeed, ref xSmoothing, xAccelTime);
 
         Move(velocity * Time.deltaTime);
     }

@@ -1124,6 +1124,7 @@ MonoBehaviour:
   verticalRaySpacing: 0
   horizontalRaySpacing: 0
   movementSpeed: 7
+  xAccelTime: 0.07
   jumpVelocity: 10
   jumpButtonReleaseVelocity: 4
   gravity: -15
