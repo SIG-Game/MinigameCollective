@@ -18,7 +18,7 @@ public class ProjectileSpawnerAden : MonoBehaviour
         while (true)
         {
             GameObject instantiatedProjectile = Instantiate(projectile, firePoint.position, Quaternion.identity);
-            instantiatedProjectile.GetComponent<Rigidbody2D>().velocity = projectileVelocity;
+            instantiatedProjectile.GetComponent<ProjectileAden>().velocity = projectileVelocity;
             yield return new WaitForSeconds(spawnTime);
         }
     }

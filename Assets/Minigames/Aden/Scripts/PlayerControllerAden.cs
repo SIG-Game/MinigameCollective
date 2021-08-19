@@ -167,7 +167,7 @@ public class PlayerControllerAden : RaycastControllerAden
         bulletLocalScale.x *= direction;
 
         spawnedBullet.transform.localScale = bulletLocalScale;
-        spawnedBullet.GetComponent<Rigidbody2D>().velocity = new Vector3(direction * bulletSpeed, 0.0f, 0.0f);
+        spawnedBullet.GetComponent<ProjectileAden>().velocity = new Vector3(direction * bulletSpeed, 0.0f, 0.0f);
     }
 
     public void RespawnPlayer()

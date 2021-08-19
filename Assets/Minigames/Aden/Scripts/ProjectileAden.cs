@@ -2,6 +2,13 @@
 
 public class ProjectileAden : MonoBehaviour
 {
+    public Vector3 velocity;
+
+    private void Update()
+    {
+        transform.Translate(velocity * Time.deltaTime);
+    }
+
     private void OnBecameInvisible()
     {
         Destroy(gameObject);

@@ -11,11 +11,11 @@ GameObject:
   - component: {fileID: 6857672181367148685}
   - component: {fileID: 6857672181367148684}
   - component: {fileID: 6857672181367148691}
-  - component: {fileID: 6857672181367148690}
+  - component: {fileID: 6037803981003351591}
   - component: {fileID: 8737028957000309785}
   - component: {fileID: 6857672181367148689}
   m_Layer: 0
-  m_Name: Hurt Player Projectile
+  m_Name: Respawn Player Projectile Aden
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -101,7 +101,7 @@ CircleCollider2D:
   m_Offset: {x: 0, y: 0}
   serializedVersion: 2
   m_Radius: 0.5
---- !u!50 &6857672181367148690
+--- !u!50 &6037803981003351591
 Rigidbody2D:
   serializedVersion: 4
   m_ObjectHideFlags: 0
@@ -109,7 +109,7 @@ Rigidbody2D:
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 6857672181367148688}
-  m_BodyType: 0
+  m_BodyType: 1
   m_Simulated: 1
   m_UseFullKinematicContacts: 0
   m_UseAutoMass: 0
@@ -134,6 +134,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 7b0acc71b8dc03b499c9047e78713456, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  velocity: {x: 0, y: 0, z: 0}
 --- !u!114 &6857672181367148689
 MonoBehaviour:
   m_ObjectHideFlags: 0
