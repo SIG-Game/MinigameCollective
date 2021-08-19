@@ -4,6 +4,7 @@ public class PlayerControllerAden : RaycastControllerAden
 {
     public float movementSpeed;
     public float jumpVelocity;
+    public float jumpButtonReleaseVelocity;
     public float gravity;
 
     public Transform firePoint;
@@ -54,6 +55,10 @@ public class PlayerControllerAden : RaycastControllerAden
         if (Input.GetKeyDown(KeyCode.Space) && collisions.below)
         {
             velocity.y += jumpVelocity;
+        }
+        else if (Input.GetKeyUp(KeyCode.Space) && velocity.y > jumpButtonReleaseVelocity)
+        {
+            velocity.y = jumpButtonReleaseVelocity;
         }
 
         velocity.x = horizontalInput * movementSpeed;
