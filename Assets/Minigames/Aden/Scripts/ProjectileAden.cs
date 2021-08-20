@@ -2,21 +2,14 @@
 
 public class ProjectileAden : MonoBehaviour
 {
-    public Vector3 velocity;
-
-    private void Update()
-    {
-        transform.Translate(velocity * Time.deltaTime);
-    }
-
     private void OnBecameInvisible()
     {
         Destroy(gameObject);
     }
 
-    private void OnTriggerEnter2D(Collider2D collision)
+    private void OnCollisionEnter2D(Collision2D collision)
     {
-        if (collision.gameObject.layer != 8)
+        if (collision.gameObject.layer == 10)
         {
             Destroy(gameObject);
         }

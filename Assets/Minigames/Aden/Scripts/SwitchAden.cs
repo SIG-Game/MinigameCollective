@@ -24,6 +24,8 @@ public class SwitchAden : MonoBehaviour
     {
         if (other.gameObject.layer == 11)
         {
+            Destroy(other.gameObject);
+
             if (curState == SwitchState.On)
             {
                 anim.SetBool("IsOn", false);
