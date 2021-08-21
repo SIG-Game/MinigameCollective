@@ -9,6 +9,10 @@ public class PlayerControllerAden : RaycastControllerAden
     public float jumpButtonReleaseVelocity;
     public float gravity;
 
+    public Vector2 wallJumpVel;
+    public Vector2 wallJumpTowardVel;
+    public Vector2 wallJumpAwayVel;
+
     public Transform firePoint;
     public GameObject bullet;
     public float bulletSpeed;
@@ -20,6 +24,8 @@ public class PlayerControllerAden : RaycastControllerAden
 
     Vector3 startPoint;
     Vector3 velocity;
+
+    bool wallHanging = false;
 
     public override void Start()
     {
@@ -36,35 +42,77 @@ public class PlayerControllerAden : RaycastControllerAden
 
         float horizontalInput = Input.GetAxisRaw("Horizontal");
 
-        if (horizontalInput != 0.0f && direction != Mathf.Sign(horizontalInput))
+        if (wallHanging)
         {
-            FlipPlayer();
-        }
+            if (Input.GetKeyDown(KeyCode.Space))
+            {
+                if (horizontalInput == 0.0f)
+                {
+                    velocity.x = direction * wallJumpVel.x;
+                    velocity.y = wallJumpVel.y;
+                }
+                else if (Mathf.Sign(horizontalInput) == direction)
+                {
+                    velocity.x = direction * wallJumpAwayVel.x;
+                    velocity.y = wallJumpAwayVel.y;
+                }
+                else
+                {
+                    velocity.x = direction * wallJumpTowardVel.x;
+                    velocity.y = wallJumpTowardVel.y;
+                }
 
-        if (collisions.above || collisions.below)
-        {
-            velocity.y = 0.0f;
-        }
-
-        if (velocity.y == 0.0f)
-        {
-            velocity.y += gravity * Time.deltaTime * 0.5f;
+                velocity.y += gravity * Time.deltaTime * 0.5f;
+                wallHanging = false;
+            }
         }
         else
         {
-            velocity.y += gravity * Time.deltaTime;
-        }
+            if (horizontalInput != 0.0f && direction != Mathf.Sign(horizontalInput))
+            {
+                FlipPlayer();
+            }
 
-        if (Input.GetKeyDown(KeyCode.Space) && collisions.below)
-        {
-            velocity.y += jumpVelocity;
-        }
-        else if (Input.GetKeyUp(KeyCode.Space) && velocity.y > jumpButtonReleaseVelocity)
-        {
-            velocity.y = jumpButtonReleaseVelocity;
-        }
+            if (collisions.left || collisions.right)
+            {
+                velocity.x = 0.0f;
+                xSmoothing = 0.0f; 
+            }
 
-        velocity.x = Mathf.SmoothDamp(velocity.x, horizontalInput * movementSpeed, ref xSmoothing, collisions.below ? xAccelTimeGround : xAccelTimeAir);
+            if (collisions.above || collisions.below)
+            {
+                velocity.y = 0.0f;
+            }
+
+            if (velocity.y == 0.0f)
+            {
+                velocity.y += gravity * Time.deltaTime * 0.5f;
+            }
+            else
+            {
+                velocity.y += gravity * Time.deltaTime;
+            }
+
+            if (Input.GetKeyDown(KeyCode.Space) && collisions.below)
+            {
+                velocity.y += jumpVelocity;
+            }
+            else if (Input.GetKeyUp(KeyCode.Space) && velocity.y > jumpButtonReleaseVelocity)
+            {
+                velocity.y = jumpButtonReleaseVelocity;
+            }
+
+            if (Input.GetKeyDown(KeyCode.LeftShift) && !collisions.below && ((direction == 1 && collisions.right) || (direction == -1 && collisions.left)))
+            {
+                wallHanging = true;
+                velocity.y = 0.0f;
+                FlipPlayer();
+            }
+            else
+            {
+                velocity.x = Mathf.SmoothDamp(velocity.x, horizontalInput * movementSpeed, ref xSmoothing, collisions.below ? xAccelTimeGround : xAccelTimeAir);
+            }
+        }
 
         Move(velocity * Time.deltaTime);
     }
@@ -175,6 +223,7 @@ public class PlayerControllerAden : RaycastControllerAden
     {
         transform.position = startPoint;
         velocity = Vector2.zero;
+        wallHanging = false;
 
         if (direction == -1)
         {
