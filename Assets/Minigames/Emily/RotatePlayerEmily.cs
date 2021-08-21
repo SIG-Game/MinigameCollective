@@ -15,19 +15,13 @@ public class RotatePlayerEmily : MonoBehaviour
     void Update()
     {
         Quaternion temp = transform.rotation;
-        if(Input.GetKeyDown(KeyCode.A)) {
+        float horiz = Input.GetAxisRaw("Horizontal");
+
+        if(horiz < 0) {
             temp.y = 0;
             transform.rotation = temp;
         }
-        if(Input.GetKeyDown(KeyCode.D)) {
-            temp.y = 180;
-            transform.rotation = temp;
-        }
-        if(Input.GetKeyDown(KeyCode.LeftArrow)) {
-            temp.y = 0;
-            transform.rotation = temp;
-        }
-        if(Input.GetKeyDown(KeyCode.RightArrow)) {
+        if(horiz > 0) {
             temp.y = 180;
             transform.rotation = temp;
         }
