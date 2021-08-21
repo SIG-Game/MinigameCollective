@@ -3,7 +3,8 @@
 public class PlayerControllerAden : RaycastControllerAden
 {
     public float movementSpeed;
-    public float xAccelTime;
+    public float xAccelTimeGround;
+    public float xAccelTimeAir;
     public float jumpVelocity;
     public float jumpButtonReleaseVelocity;
     public float gravity;
@@ -63,7 +64,7 @@ public class PlayerControllerAden : RaycastControllerAden
             velocity.y = jumpButtonReleaseVelocity;
         }
 
-        velocity.x = Mathf.SmoothDamp(velocity.x, horizontalInput * movementSpeed, ref xSmoothing, xAccelTime);
+        velocity.x = Mathf.SmoothDamp(velocity.x, horizontalInput * movementSpeed, ref xSmoothing, collisions.below ? xAccelTimeGround : xAccelTimeAir);
 
         Move(velocity * Time.deltaTime);
     }
