@@ -6,14 +6,13 @@ public class MovementWaleed : MonoBehaviour
 {
     public Rigidbody2D rb;
     public Camera cam;
-    public float speed;
-    public float dashSpeed;
+    public float speed = 5f;
+    public float dashSpeed = 500f;
     public float dashCooldown;
-    private int direction;
-    private Vector2 lastDirection;
     private Vector2 movement;
     private Vector2 mousePos;
     public Vector2 dashDir;
+    bool dashing = false;
 
     // Start is called before the first frame update
     void Start()
@@ -33,19 +32,44 @@ public class MovementWaleed : MonoBehaviour
 
     void FixedUpdate()
     {
-        rb.MovePosition(rb.position + movement * speed * Time.fixedDeltaTime);
-
+        if (!dashing) 
+        {
+            rb.MovePosition(rb.position + movement * speed * Time.fixedDeltaTime);
+        }
         Vector2 lastDirection = mousePos - rb.position;
         float angle = Mathf.Atan2(lastDirection.y, lastDirection.x) * Mathf.Rad2Deg;
         rb.rotation = angle;
-        dashDir = mousePos - rb.position;
+        dashDir = (mousePos - rb.position).normalized;
         Dash();
     }
 
+    bool canDash = true;
+    
+
     void Dash() {
-        if (Input.GetKey("space"))
+        if (Input.GetKey("space") && canDash)
         {
-            rb.MovePosition(rb.position + dashDir * dashSpeed * Time.fixedDeltaTime);
+            canDash = false;
+            Debug.Log("canDAsh is true");
+            dashing = true;
+            StartCoroutine("dashWait");
+            StartCoroutine("resetDash");
         }
+    }
+
+    IEnumerator dashWait() {
+        for (int i = 1; i < 5; i++)
+        {
+            rb.MovePosition(rb.position + dashDir * i);
+            Debug.Log(rb.position);
+            yield return new WaitForFixedUpdate();
+        }
+        dashing = false;
+        
+    }
+
+    IEnumerator resetDash() {
+        yield return new WaitForSeconds(3.0f);
+        canDash = true;
     }
 }
