@@ -4,15 +4,13 @@ using UnityEngine;
 
 public class EnemyMovementScriptWaleed : MonoBehaviour
 {
-    // Start is called before the first frame update
-    void Start()
-    {
-        
-    }
+
+    private float enemyMoveSpeed = 1f;
+    public Transform player;
 
     // Update is called once per frame
-    void Update()
+    void FixedUpdate()
     {
-        
+        transform.position = Vector2.MoveTowards(transform.position, player.position, enemyMoveSpeed * Time.deltaTime);
     }
 }
