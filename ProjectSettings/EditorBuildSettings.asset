@@ -17,4 +17,7 @@ EditorBuildSettings:
   - enabled: 1
     path: Assets/Minigames/Emily/StartScreenEmily.unity
     guid: 01249c843f1eb454584cefffbc5f2c81
+  - enabled: 1
+    path: Assets/Minigames/Emily/WinnerScreenEmily.unity
+    guid: cc46f18c5c7564466ae124a03b5e65fe
   m_configObjects: {}
