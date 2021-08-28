@@ -231,6 +231,11 @@ public class PlayerControllerAden : RaycastControllerAden
         }
     }
 
+    public bool IsWallHanging()
+    {
+        return wallHanging;
+    }
+
     struct CollisionInfo
     {
         public bool above, below, left, right;

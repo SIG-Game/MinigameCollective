@@ -1,4 +1,4 @@
-The `PlayerControllerAden.cs` and `RaycastControllerAden.cs` scripts are based on Sebastian Lague's [2D Platformer Tutorial code](https://github.com/SebLague/2DPlatformer-Tutorial), which has the following license:
+The `MovingPlatformAden.cs`, `PlayerControllerAden.cs` and `RaycastControllerAden.cs` scripts are based on Sebastian Lague's [2D Platformer Tutorial code](https://github.com/SebLague/2DPlatformer-Tutorial), which has the following license:
 ```
 The MIT License (MIT)
 
