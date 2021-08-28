@@ -20,4 +20,19 @@ EditorBuildSettings:
   - enabled: 1
     path: Assets/Minigames/Emily/WinnerScreenEmily.unity
     guid: cc46f18c5c7564466ae124a03b5e65fe
+  - enabled: 1
+    path: Assets/Minigames/Aden/Scenes/Level 1 Aden.unity
+    guid: 183564dc38ab7f14c8d960525fec5b2a
+  - enabled: 1
+    path: Assets/Minigames/Aden/Scenes/Level 2 Aden.unity
+    guid: 07626130c8582e345a8db7db9fa7eb1c
+  - enabled: 1
+    path: Assets/Minigames/Aden/Scenes/Level 3 Aden.unity
+    guid: 91d6c7c96a7d4ec41908eca379634691
+  - enabled: 1
+    path: Assets/Minigames/Aden/Scenes/Level 4 Aden.unity
+    guid: 8dcace186f5a37a46993b43f54943563
+  - enabled: 1
+    path: Assets/Minigames/Aden/Scenes/Level 5 Aden.unity
+    guid: 9813f3154780d154b8b2d29330a157f4
   m_configObjects: {}
