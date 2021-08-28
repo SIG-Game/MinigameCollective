@@ -35,7 +35,7 @@ public class PlayerControllerAden : RaycastControllerAden
 
     void Update()
     {
-        if (Input.GetMouseButtonDown(0))
+        if (Input.GetButtonDown("Shoot"))
         {
             Shoot();
         }
@@ -44,7 +44,7 @@ public class PlayerControllerAden : RaycastControllerAden
 
         if (wallHanging)
         {
-            if (Input.GetKeyDown(KeyCode.Space))
+            if (Input.GetButtonDown("Jump"))
             {
                 if (horizontalInput == 0.0f)
                 {
@@ -93,16 +93,16 @@ public class PlayerControllerAden : RaycastControllerAden
                 velocity.y += gravity * Time.deltaTime;
             }
 
-            if (Input.GetKeyDown(KeyCode.Space) && collisions.below)
+            if (Input.GetButtonDown("Jump") && collisions.below)
             {
                 velocity.y += jumpVelocity;
             }
-            else if (Input.GetKeyUp(KeyCode.Space) && velocity.y > jumpButtonReleaseVelocity)
+            else if (Input.GetButtonUp("Jump") && velocity.y > jumpButtonReleaseVelocity)
             {
                 velocity.y = jumpButtonReleaseVelocity;
             }
 
-            if (Input.GetKeyDown(KeyCode.LeftShift) && !collisions.below && ((direction == 1 && collisions.right) || (direction == -1 && collisions.left)))
+            if (Input.GetButtonDown("Wall Cling") && !collisions.below && ((direction == 1 && collisions.right) || (direction == -1 && collisions.left)))
             {
                 wallHanging = true;
                 velocity.y = 0.0f;
